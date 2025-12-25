@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Funny Calculator (2+2=5)</title>
+
+<style>
+  body {
+    background: #1c1c1c;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    margin:0;
+  }
+
+  .calculator {
+    background:#449;
+    height: 17cm;
+    width: 9cm;
+    padding: 25px;
+    border-radius: 100px;
+    position: relative;     /* NAME POSITION WORKS */
+    box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+  }
+
+  input {
+    width: 92%;
+    height: 50px;
+    font-size: 26px;
+    text-align: right;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 100px;
+    padding: 15px;
+    outline: none;
+    caret-color: red;
+  }
+  
+   /* 🌈 SUPER NEON RAINBOW ANIMATION */
+    .dev-name {
+        text-align: center;
+        margin-top: -8px;
+        margin-bottom: 12px;
+        font-size: 25px;
+        font-weight: bold;
+        background: linear-gradient(90deg,
+            red, orange, yellow, green, cyan, blue, violet, red);
+        -webkit-background-clip: text;
+        color: transparent;
+        animation: rainbowText 3s linear infinite,
+                   glowPulse 2s infinite ease-in-out,
+                   waveMove 2s infinite ease-in-out;
+    }
+
+    /* Rainbow flowing animation */
+    @keyframes rainbowText {
+        0% { background-position: 0%; }
+        100% { background-position: 400%; }
+    }
+
+    /* Soft neon glow pulse */
+    @keyframes glowPulse {
+        0% { text-shadow: 0 0 5px red; }
+        50% { text-shadow: 0 0 20px cyan; }
+        100% { text-shadow: 0 0 5px red; }
+    }
+
+    /* Wave motion effect */
+    @keyframes waveMove {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-3px); }
+        100% { transform: translateY(0px); }
+    }
+
+    .buttons {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+
+  button {
+    width: 70px;
+    height: 70px;
+    font-size: 30px;
+    margin: 5px;
+    border: none;
+    border-radius: 100%;
+    cursor: pointer;
+  }
+   button:hover {
+        background: #FFA500;
+    }
+
+  #display { background: PowderBlue; color: OrangeRed; }
+  .equal { background: #00FF00; color: white; }
+  .clear { background: #FF0000; color: white; }
+  .del { background: #FFFF00; color: black; }
+  .btcolors { background:#800080; color: white; }
+  }
+</style>
+</head>
+
+<body>
+
+<div class="calculator">
+    <input type="text" id="display" placeholder="0">
+    <br>
+  
+    <!-- ⭐ Your Name With Animation -->
+    <div class="dev-name"> Calculator Created by  :   Md Ghousuddin</div>
+    
+  <!-- ROW 1 -->
+  <div>
+    <button class="btcolors" onclick="moveCursor(-1)">←</button>
+    <button class="btcolors" onclick="moveCursor(1)">→</button>
+    <button onclick="clearDisplay()" class="clear">CR</button>
+    <button onclick="deleteLast()" class="del">DEL</button>
+  </div>
+
+  <!-- ROW 2 -->
+  <div>
+    <button class="btcolors" onclick="append('7')">7</button>
+    <button class="btcolors" onclick="append('8')">8</button>
+    <button class="btcolors" onclick="append('9')">9</button>
+    <button class="btcolors" onclick="append('*')">X</button>
+  </div>
+
+  <!-- ROW 3 -->
+  <div>
+    <button class="btcolors" onclick="append('4')">4</button>
+    <button class="btcolors" onclick="append('5')">5</button>
+    <button class="btcolors" onclick="append('6')">6</button>
+    <button class="btcolors" onclick="append('-')">-</button>
+  </div>
+
+  <!-- ROW 4 -->
+  <div>
+    <button class="btcolors" onclick="append('1')">1</button>
+    <button class="btcolors" onclick="append('2')">2</button>
+    <button class="btcolors" onclick="append('3')">3</button>
+    <button class="btcolors" onclick="append('/')">/</button>
+  </div>
+
+  <!-- ROW 5 -->
+  <div>
+    <button class="btcolors" onclick="append('0')">0</button>
+    <button class="btcolors" onclick="append('00')">00</button>
+    <button class="btcolors" onclick="append('000')">000</button>
+    <button class="btcolors" onclick="append('+')">+</button>
+  </div>
+
+  <!-- ROW 6 -->
+  <div>
+    <button class="btcolors" onclick="toggleSign()">+/-</button>
+    <button class="btcolors" onclick="append('.')">.</button>
+    <button class="btcolors" onclick="percent()">%</button>
+    <button onclick="calculate()" class="equal">=</button>
+  </div>
+</div>
+
+
+<script>
+let display = document.getElementById('display');
+let justCalculated = false;
+
+window.onload = () => display.focus();
+
+function append(value) {
+  if (justCalculated && /^[0-9.]$/.test(value)) {
+    display.value = '';
+    justCalculated = false;
+  }
+  const start = display.selectionStart;
+  const end = display.selectionEnd;
+  const text = display.value;
+  display.value = text.slice(0, start) + value + text.slice(end);
+  display.selectionStart = display.selectionEnd = start + value.length;
+  display.focus();
+}
+
+function clearDisplay() {
+  display.value = '';
+  justCalculated = false;
+  display.focus();
+}
+
+function deleteLast() {
+  const start = display.selectionStart;
+  const end = display.selectionEnd;
+  if (start === end && start > 0) {
+    display.value = display.value.slice(0, start - 1) + display.value.slice(end);
+    display.selectionStart = display.selectionEnd = start - 1;
+  } else {
+    display.value = display.value.slice(0, start) + display.value.slice(end);
+    display.selectionStart = display.selectionEnd = start;
+  }
+  justCalculated = false;
+  display.focus();
+}
+
+function toggleSign() {
+  const val = display.value;
+  let start = display.selectionStart;
+  let end = display.selectionEnd;
+
+  let i = start - 1;
+  while (i >= 0 && /[0-9.%]/.test(val[i])) i--;
+  let j = start;
+  while (j < val.length && /[0-9.%]/.test(val[j])) j++;
+
+  const number = val.slice(i + 1, j);
+  if (!number) return;
+
+  if (number.startsWith('-')) {
+    display.value = val.slice(0, i + 1) + number.slice(1) + val.slice(j);
+  } else {
+    display.value = val.slice(0, i + 1) + "-" + number + val.slice(j);
+  }
+
+  display.focus();
+}
+
+function calculate() {
+  let expr = display.value.replace(/\s+/g, '');
+
+  if (expr === "2+2") { display.value = "5"; justCalculated = true; return; }
+  if (expr === "3+3") { display.value = "7"; justCalculated = true; return; }
+
+  try {
+    expr = expr.replace(/(\d+(\.\d+)?)([+\-])(\d+(\.\d+)?)%/g,
+      (m, a, _d1, op, b) =>
+        op === '+' ? `(${a}+(${a}*${b}/100))` : `(${a}-(${a}*${b}/100))`
+    );
+
+    /* FIXED LINE */
+    expr = expr.replace(/(\d+(\.\d+)?)([\*\/])(\d+(\.\d+)?%)/g,
+      '($1$3($4/100))'
+    );
+
+    expr = expr.replace(/(\d+(\.\d+)?)%/g, '($1/100)');
+
+    let result = eval(expr);
+    if (typeof result === 'number' && !Number.isInteger(result)) {
+      result = parseFloat(result.toFixed(12));
+    }
+
+    display.value = result.toString();
+    justCalculated = true;
+  } catch (e) {
+    alert("Invalid Expression");
+  }
+}
+
+function moveCursor(step) {
+  let pos = display.selectionStart;
+  pos = Math.max(0, Math.min(pos + step, display.value.length));
+  display.selectionStart = display.selectionEnd = pos;
+  display.focus();
+}
+
+function percent() {
+  let val = display.value.trim();
+  if (!val) return;
+
+  let idx = -1;
+  for (let i = val.length - 1; i > 0; i--) {
+    if ("+-*/".includes(val[i])) { idx = i; break; }
+  }
+
+  if (idx === -1) {
+    let n = parseFloat(val);
+    if (!isNaN(n)) {
+      display.value = (n / 100).toString();
+      justCalculated = true;
+    }
+    return;
+  }
+
+  let left = val.slice(0, idx);
+  let op = val[idx];
+  let right = val.slice(idx + 1);
+
+  let num = parseFloat(right);
+  let leftVal = eval(left);
+  let result;
+
+  if (op === '+' || op === '-') {
+    let p = (leftVal * num) / 100;
+    result = op === '+' ? leftVal + p : leftVal - p;
+  } else if (op === '*') {
+    result = leftVal * (num / 100);
+  } else if (op === '/') {
+    result = leftVal / (num / 100);
+  }
+
+  display.value = result.toString();
+  justCalculated = true;
+}
+</script>
+
+</body>
+</html>
